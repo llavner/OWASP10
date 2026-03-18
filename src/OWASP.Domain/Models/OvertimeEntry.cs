@@ -1,14 +1,15 @@
 namespace OWASP.Domain.Models;
 
-public class OvertimeEntry(long id, Guid userId, DateTime date, decimal minutes, string description, OvertimeCategory category, DateTime createdAt, DateTime updatedAt)
+public class OvertimeEntry(Guid id, Guid userId, DateTime date, decimal minutes, string description, OvertimeCategory category, DateTimeOffset createdAt, DateTimeOffset updatedAt)
 {
-    public long Id { get; set; } = id;
+    public Guid Id { get; set; } = id;
 
-    required public Guid UserId { get; set; } = userId;
+    public Guid UserId { get; set; } = userId;
 
     public DateTime Date { get; set; } = date;
 
     private decimal _minutes = minutes;
+
     public decimal Minutes
     {
         get => _minutes;
