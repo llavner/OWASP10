@@ -4,23 +4,25 @@ using Microsoft.Azure.Cosmos;
 
 public class CosmosDbContext
 {
-    private readonly string endpointUrl;
-    private readonly string primaryKey;
-    private readonly string databaseName;
-    private readonly string containerName;
-    private CosmosClient cosmosClient;
-    private Database database;
-    private Container container;
+    private readonly string _endpointUrl;
+    private readonly string _primaryKey;
+    private readonly string _databaseName;
+    private readonly string _containerName;
+    private CosmosClient _cosmosClient;
+    private Database _database;
+
+    public Container Container { get; }
 
     public CosmosDbContext(string endpointUrl, string primaryKey, string databaseName, string containerName)
     {
-        this.endpointUrl = endpointUrl;
-        this.primaryKey = primaryKey;
-        this.databaseName = databaseName;
-        this.containerName = containerName;
+        _endpointUrl = endpointUrl;
+        _primaryKey = primaryKey;
+        _databaseName = databaseName;
+        _containerName = containerName;
 
-        this.cosmosClient = new CosmosClient(this.endpointUrl, this.primaryKey);
-        this.database = this.cosmosClient.GetDatabase(this.databaseName);
-        this.container = this.database.GetContainer(this.containerName);
+        _cosmosClient = new CosmosClient(_endpointUrl, _primaryKey);
+        _database = _cosmosClient.GetDatabase(_databaseName);
+
+        Container = _database.GetContainer(_containerName);
     }
 }
