@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\OWASP.Application\OWASP.Application.csproj" />
     <ProjectReference Include="..\OWASP.Infrastructure\OWASP.Infrastructure.csproj" />
   </ItemGroup>
