@@ -12,8 +12,9 @@
 name: "CodeQL Advanced"
 
 on:
-  pull_request:
-    branches: [ "dev" ]
+  # pull_request:
+  #   branches: [ "dev" ]
+  workflow_dispatch:
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
