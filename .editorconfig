@@ -211,13 +211,24 @@ dotnet_diagnostic.SA1000.severity = suggestion
 dotnet_diagnostic.SA1001.severity = suggestion
 dotnet_diagnostic.SA1005.severity = suggestion
 
+# Prefix local calls with this
+dotnet_diagnostic.SA1101.severity = none
+
 # File header requirements (off)
 dotnet_diagnostic.SA1633.severity = none
 dotnet_diagnostic.SA1636.severity = none
 
+# Field names should not begin with underscore
+dotnet_diagnostic.SA1309.severity = none
+
+
 ############################################
 # Tests (uncomment once you add a tests/ folder)
 ############################################
+
+
+
+
 # [tests/**/*.cs]
 # dotnet_diagnostic.CA1707.severity = none
 # dotnet_diagnostic.SA1300.severity = none

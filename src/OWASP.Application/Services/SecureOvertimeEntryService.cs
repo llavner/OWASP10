@@ -1,5 +1,5 @@
 namespace OWASP.Application.Services;
 
-internal class SecureOvertimeEntryService
+public class SecureOvertimeEntryService
 {
 }
