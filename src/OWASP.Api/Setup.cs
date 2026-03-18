@@ -9,6 +9,7 @@ public static class Setup
     public static void AddApiServices(this IServiceCollection services)
     {
         services.AddScoped<ICurrentUserAccessor, StubCurrentUserAccessor>();
-        services.AddSingleton<IOvertimeEntryRepository, InMemoryRepository>();
+        services.AddSingleton<InMemoryRepository>();
+        services.AddScoped<IOvertimeEntryRepository, CosmosRepository>();
     }
 }
