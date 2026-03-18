@@ -1,18 +1,64 @@
 namespace OWASP.Infrastructure.Repository;
 
+using Microsoft.Azure.Cosmos;
+
 using OWASP.Application.Interfaces;
+using OWASP.Infrastructure.DataAccess;
 
-public class CosmosRepository : IOvertimeEntryRepository
+public class CosmosRepository(CosmosDbContext cosmosDb) : IOvertimeEntryRepository
 {
-    public Task<T> LoadRecordByEmailAsync<T>(string email) => throw new NotImplementedException();
+    private readonly CosmosDbContext _cosmosDb = cosmosDb;
 
-    public Task<T> LoadRecordByIdAsync<T>(string id) => throw new NotImplementedException();
+    public async Task UpsertRecordsAsync<T>(T record)
+    {
+        await _cosmosDb.Container.UpsertItemAsync(record);
+    }
 
-    public Task<T> LoadRecordByTokenAsync<T>(string token) => throw new NotImplementedException();
+    public async Task<List<T>> LoadRecordsAsync<T>()
+    {
+        var sql = "select * from c";
+        var queryDefinition = new QueryDefinition(sql);
+        var feedIterator = _cosmosDb.Container.GetItemQueryIterator<T>(queryDefinition);
 
-    public Task<T> LoadRecordByUserNameAsync<T>(string userName) => throw new NotImplementedException();
+        List<T> records = new List<T>();
 
-    public Task<List<T>> LoadRecordsAsync<T>() => throw new NotImplementedException();
+        while (feedIterator.HasMoreResults)
+        {
+            FeedResponse<T> currentResultSet = await feedIterator.ReadNextAsync();
 
-    public Task UpsertRecordsAsync<T>(T record) => throw new NotImplementedException();
+            foreach (var record in currentResultSet)
+            {
+                records.Add(record);
+            }
+        }
+
+        return records;
+    }
+
+    public Task<T> LoadRecordByIdAsync<T>(string id) => LoadRecordByPropertyAsync<T>("Id", id);
+
+    public Task<T> LoadRecordByEmailAsync<T>(string email) => LoadRecordByPropertyAsync<T>("EmailAddress", email);
+
+    public Task<T> LoadRecordByTokenAsync<T>(string token) => LoadRecordByPropertyAsync<T>("Token", token);
+
+    public Task<T> LoadRecordByUserNameAsync<T>(string userName) => LoadRecordByPropertyAsync<T>("UserName", userName);
+
+    private async Task<T> LoadRecordByPropertyAsync<T>(string propertyName, string value)
+    {
+        var sql = $"select * from c where c.{propertyName} = @Value";
+        var queryDefinition = new QueryDefinition(sql).WithParameter("@Value", value);
+        var feedIterator = _cosmosDb.Container.GetItemQueryIterator<T>(queryDefinition);
+
+        while (feedIterator.HasMoreResults)
+        {
+            FeedResponse<T> currentResultSet = await feedIterator.ReadNextAsync();
+
+            foreach (var record in currentResultSet)
+            {
+                return record;
+            }
+        }
+
+        return default!;
+    }
 }
