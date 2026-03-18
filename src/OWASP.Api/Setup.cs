@@ -4,6 +4,7 @@ using Azure.Identity;
 
 using OWASP.Api.Auth;
 using OWASP.Application.Interfaces;
+using OWASP.Application.Services;
 using OWASP.Infrastructure.DataAccess;
 using OWASP.Infrastructure.Repository;
 
@@ -12,7 +13,12 @@ public static class Setup
     public static void AddApiServices(this IServiceCollection services)
     {
         services.AddScoped<ICurrentUserAccessor, StubCurrentUserAccessor>();
-        services.AddSingleton<InMemoryRepository>();
+        services.AddScoped<IOvertimeService, SecureOvertimeEntryService>();
+    }
+
+    public static void AddApiRepositories(this IServiceCollection services)
+    {
+        services.AddSingleton<IOvertimeEntryRepository, InMemoryRepository>();
         services.AddScoped<IOvertimeEntryRepository, CosmosRepository>();
     }
 

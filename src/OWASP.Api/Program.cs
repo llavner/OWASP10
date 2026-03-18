@@ -6,6 +6,7 @@ builder.AddKeyVaultSecrets();
 builder.AddCosmosDb();
 
 builder.Services.AddHealthChecks();
+builder.Services.AddApiRepositories();
 builder.Services.AddApiServices();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
