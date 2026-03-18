@@ -1,7 +1,9 @@
+using OWASP.Api;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddApiServices();
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
