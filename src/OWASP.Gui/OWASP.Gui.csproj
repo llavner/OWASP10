@@ -10,9 +10,13 @@
   <ItemGroup>
     <PackageReference Include="MudBlazor" Version="8.*" />
   </ItemGroup>
-
-
+  
   <ItemGroup>
     <ProjectReference Include="..\OWASP.Application\OWASP.Application.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
+  </ItemGroup>
+  
 </Project>
