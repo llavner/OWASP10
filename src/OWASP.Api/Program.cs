@@ -2,6 +2,10 @@ using OWASP.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddKeyVaultSecrets();
+builder.AddCosmosDb();
+
+builder.Services.AddHealthChecks();
 builder.Services.AddApiServices();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -18,5 +22,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHealthChecks("/health").AllowAnonymous();
 
 app.Run();
