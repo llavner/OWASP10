@@ -1,7 +1,7 @@
+namespace OWASP.Infrastructure.Repository;
+
 using OWASP.Application.Interfaces;
 using OWASP.Domain.Models;
-
-namespace OWASP.Infrastructure.Repository;
 
 public class CosmosRepository : IOvertimeEntryRepository
 {
