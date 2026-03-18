@@ -2,10 +2,9 @@ namespace OWASP.Infrastructure.Repository;
 
 using System.Collections.Concurrent;
 
-using OWASP.Application.Interfaces;
 using OWASP.Domain.Models;
 
-public class InMemoryRepository : IOvertimeEntryRepository
+public class InMemoryRepository
 {
     private readonly ConcurrentDictionary<Guid, ConcurrentDictionary<long, OvertimeEntry>> data = new();
 
