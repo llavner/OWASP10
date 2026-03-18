@@ -1,17 +1,18 @@
 namespace OWASP.Infrastructure.Repository;
 
 using OWASP.Application.Interfaces;
-using OWASP.Domain.Models;
 
 public class CosmosRepository : IOvertimeEntryRepository
 {
-    public Task AddAsync(OvertimeEntry entry) => throw new NotImplementedException();
+    public Task<T> LoadRecordByEmailAsync<T>(string email) => throw new NotImplementedException();
 
-    public Task DeleteAsync(Guid userId, long id) => throw new NotImplementedException();
+    public Task<T> LoadRecordByIdAsync<T>(string id) => throw new NotImplementedException();
 
-    public Task<OvertimeEntry?> GetByIdAsync(Guid userId, long id) => throw new NotImplementedException();
+    public Task<T> LoadRecordByTokenAsync<T>(string token) => throw new NotImplementedException();
 
-    public Task<IReadOnlyList<OvertimeEntry>> SearchAsync(Guid userId, DateOnly from, DateOnly to) => throw new NotImplementedException();
+    public Task<T> LoadRecordByUserNameAsync<T>(string userName) => throw new NotImplementedException();
 
-    public Task UpdateAsync(OvertimeEntry entry) => throw new NotImplementedException();
+    public Task<List<T>> LoadRecordsAsync<T>() => throw new NotImplementedException();
+
+    public Task UpsertRecordsAsync<T>(T record) => throw new NotImplementedException();
 }

@@ -1,16 +1,16 @@
-using OWASP.Domain.Models;
-
 namespace OWASP.Application.Interfaces;
 
 public interface IOvertimeEntryRepository
 {
-    Task<OvertimeEntry?> GetByIdAsync(Guid userId, long id);
+    Task UpsertRecordsAsync<T>(T record);
 
-    Task<IReadOnlyList<OvertimeEntry>> SearchAsync(Guid userId, DateOnly from, DateOnly to);
+    Task<List<T>> LoadRecordsAsync<T>();
 
-    Task AddAsync(OvertimeEntry entry);
+    Task<T> LoadRecordByIdAsync<T>(string id);
 
-    Task UpdateAsync(OvertimeEntry entry);
+    Task<T> LoadRecordByEmailAsync<T>(string email);
 
-    Task DeleteAsync(Guid userId, long id);
+    Task<T> LoadRecordByTokenAsync<T>(string token);
+
+    Task<T> LoadRecordByUserNameAsync<T>(string userName);
 }
