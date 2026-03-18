@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OWASP.Application\OWASP.Application.csproj" />
+    <ProjectReference Include="..\OWASP.Domain\OWASP.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -10,4 +10,9 @@
   <ItemGroup>
     <PackageReference Include="MudBlazor" Version="8.*" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\OWASP.Application\OWASP.Application.csproj" />
+  </ItemGroup>
 </Project>

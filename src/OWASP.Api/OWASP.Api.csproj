@@ -10,4 +10,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OWASP.Application\OWASP.Application.csproj" />
+  </ItemGroup>
+
 </Project>
