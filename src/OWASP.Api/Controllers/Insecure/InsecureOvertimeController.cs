@@ -2,13 +2,20 @@ namespace OWASP.Api.Controllers.Insecure;
 
 using Microsoft.AspNetCore.Mvc;
 using OWASP.Api.Attributes;
+using OWASP.Application.Services;
 
 [Route("api/insecure/[controller]")]
 [ApiController]
 [RequireInsecureDemosEnabled]
-public class OvertimeController : ControllerBase
+public class InsecureOvertimeController : ControllerBase
 {
-    // GET: api/<OvertimeController>
+    private readonly InsecureOvertimeEntryService _service;
+
+    public InsecureOvertimeController(InsecureOvertimeEntryService service)
+    {
+        _service = service;
+    }
+
     [HttpGet]
     public IEnumerable<string> Get()
     {
@@ -19,7 +26,7 @@ public class OvertimeController : ControllerBase
     [HttpGet("{id}")]
     public string Get(int id)
     {
-        return "value";
+        return "value" + id;
     }
 
     // POST api/<OvertimeController>
