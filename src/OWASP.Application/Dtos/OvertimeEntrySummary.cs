@@ -1,5 +1,5 @@
 namespace OWASP.Application.Dtos;
 
-internal class OvertimeEntrySummary
+public class OvertimeEntrySummary
 {
 }
