@@ -4,7 +4,7 @@ namespace OWASP.Application.Interfaces;
 
 public interface IOvertimeEntryRepository
 {
-    Task<OvertimeEntry> GetByIdAsync(long id);
+    Task<OvertimeEntry?> GetByIdAsync(Guid userId, long id);
 
     Task<IReadOnlyList<OvertimeEntry>> SearchAsync(Guid userId, DateOnly from, DateOnly to);
 
@@ -12,5 +12,5 @@ public interface IOvertimeEntryRepository
 
     Task UpdateAsync(OvertimeEntry entry);
 
-    Task DeleteAsync(long id);
+    Task DeleteAsync(Guid userId, long id);
 }
