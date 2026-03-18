@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 [Route("api/secure/[controller]")]
 [ApiController]
-public class OvertimeController : ControllerBase
+public class SecureOvertimeController : ControllerBase
 {
     // GET: api/<OvertimeController>
     [HttpGet]
