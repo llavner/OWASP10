@@ -10,10 +10,16 @@ using OWASP.Infrastructure.Repository;
 
 public static class Setup
 {
-    public static void AddApiServices(this IServiceCollection services)
+    public static void AddSecureServices(this IServiceCollection services)
     {
         services.AddScoped<ICurrentUserAccessor, StubCurrentUserAccessor>();
         services.AddScoped<IOvertimeService, SecureOvertimeEntryService>();
+    }
+
+    public static void AddInsecureServices(this IServiceCollection services)
+    {
+        services.AddScoped<ICurrentUserAccessor, StubCurrentUserAccessor>();
+        services.AddScoped<InsecureOvertimeEntryService>();
     }
 
     public static void AddApiRepositories(this IServiceCollection services)

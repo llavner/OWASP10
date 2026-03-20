@@ -7,7 +7,10 @@ builder.AddCosmosDb();
 
 builder.Services.AddHealthChecks();
 builder.Services.AddApiRepositories();
-builder.Services.AddApiServices();
+
+builder.Services.AddSecureServices();
+builder.Services.AddInsecureServices();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -21,7 +24,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/health").AllowAnonymous();
 
