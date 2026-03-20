@@ -1,8 +1,8 @@
+namespace OWASP.Application.Services;
+
 using OWASP.Application.Dtos;
 using OWASP.Application.Interfaces;
 using OWASP.Application.Mapping;
-
-namespace OWASP.Application.Services;
 
 public class SecureOvertimeEntryService : IOvertimeService
 {
@@ -13,27 +13,37 @@ public class SecureOvertimeEntryService : IOvertimeService
         _repo = repo;
     }
 
-    public void CreateEntry(OvertimeEntryCreate entry)
+    public async Task CreateEntry(OvertimeEntryCreate entry)
     {
-        _repo.AddAsync(entry.Map());
+        await _repo.AddAsync(entry.Map());
     }
 
-    public void ReadEntry(OvertimeEntryResponse entry)
+    public async Task ReadEntry(OvertimeEntryResponse entry)
     {
+        await _repo.GetByIdAsync(entry.Id, entry.UserId);
     }
 
-    public void ReadAllEntries(Guid userId)
+    public async Task<IEnumerable<OvertimeEntryResponse>> ReadAllEntries(Guid userId)
     {
-        _repo.GetAllAsync(userId);
+        var entries = await _repo.GetAllAsync(userId);
+        var responses = new List<OvertimeEntryResponse>();
+
+        foreach (var entry in entries)
+        {
+            entry.Map();
+            responses.Add(entry.Map());
+        }
+
+        return responses;
     }
 
-    public void DeleteEntry(Guid id, Guid userId)
+    public async Task UpdateEntry(OvertimeEntryUpdate entry)
     {
-        _repo.DeleteAsync(id, userId);
+        await _repo.UpdateAsync(entry.Map());
     }
 
-    public void UpdateEntry(OvertimeEntryUpdate entry)
+    public async Task DeleteEntry(Guid id, Guid userId)
     {
-        _repo.UpdateAsync(entry.Map());
+        await _repo.DeleteAsync(id, userId);
     }
 }
