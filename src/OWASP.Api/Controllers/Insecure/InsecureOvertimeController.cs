@@ -1,7 +1,10 @@
 namespace OWASP.Api.Controllers.Insecure;
 
 using Microsoft.AspNetCore.Mvc;
+
 using OWASP.Api.Attributes;
+using OWASP.Application.Dtos;
+using OWASP.Application.Interfaces;
 using OWASP.Application.Services;
 
 [Route("api/insecure/[controller]")]
@@ -10,40 +13,47 @@ using OWASP.Application.Services;
 public class InsecureOvertimeController : ControllerBase
 {
     private readonly InsecureOvertimeEntryService _service;
+    private readonly ICurrentUserAccessor _currentUser;
 
-    public InsecureOvertimeController(InsecureOvertimeEntryService service)
+    public InsecureOvertimeController(InsecureOvertimeEntryService service, ICurrentUserAccessor currentUser)
     {
         _service = service;
+        _currentUser = currentUser;
     }
 
     [HttpGet]
-    public IEnumerable<string> Get()
+    public async Task<ActionResult<IEnumerable<OvertimeEntryResponse>>> Get(Guid userId)
     {
-        return new string[] { "value1", "value2" };
+        var entries = _service.ReadAllEntries(userId);
+
+        return Ok();
     }
 
-    // GET api/<OvertimeController>/5
     [HttpGet("{id}")]
-    public string Get(int id)
+    public async Task<ActionResult<OvertimeEntryResponse>> Get(OvertimeEntryResponse req)
     {
-        return "value" + id;
+        var entry = _service.ReadEntry(req);
+        return Ok(entry);
     }
 
-    // POST api/<OvertimeController>
     [HttpPost]
-    public void Post([FromBody] string value)
+    public async Task<ActionResult> Post([FromBody] OvertimeEntryCreate entry)
     {
+        await _service.CreateEntry(entry);
+        return Ok();
     }
 
-    // PUT api/<OvertimeController>/5
     [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    public async Task<ActionResult> Put([FromBody] OvertimeEntryUpdate entry)
     {
+        await _service.UpdateEntry(entry);
+        return Ok();
     }
 
-    // DELETE api/<OvertimeController>/5
     [HttpDelete("{id}")]
-    public void Delete(int id)
+    public async Task<ActionResult> Delete(Guid id)
     {
+        await _service.DeleteEntry(id, _currentUser.GetUserId());
+        return Ok();
     }
 }
