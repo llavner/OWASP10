@@ -1,7 +1,7 @@
+namespace OWASP.Application.Mapping;
+
 using OWASP.Application.Dtos;
 using OWASP.Domain.Models;
-
-namespace OWASP.Application.Mapping;
 
 public static class OvertimeEntryMappingExtensions
 {
@@ -42,5 +42,18 @@ public static class OvertimeEntryMappingExtensions
             dto.Category,
             DateTimeOffset.UtcNow,
             DateTimeOffset.Now);
+    }
+
+    public static OvertimeEntryResponse Map(this OvertimeEntry dto)
+    {
+        var dateOnly = DateOnly.FromDateTime(dto.Date);
+
+        return new OvertimeEntryResponse(
+            dto.Id,
+            dto.UserId,
+            dateOnly,
+            dto.Minutes,
+            dto.Description,
+            dto.Category);
     }
 }
