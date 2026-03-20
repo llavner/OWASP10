@@ -26,6 +26,16 @@ public class InMemoryRepository : IOvertimeEntryRepository
         return Task.CompletedTask;
     }
 
+    public Task<IEnumerable<OvertimeEntry>> GetAllAsync(Guid userId)
+    {
+        if (_data.TryGetValue(userId, out var userDict))
+        {
+            return Task.FromResult<IEnumerable<OvertimeEntry>>(userDict.Values.ToList());
+        }
+
+        return Task.FromResult<IEnumerable<OvertimeEntry>>(Enumerable.Empty<OvertimeEntry>());
+    }
+
     public Task<OvertimeEntry?> GetByIdAsync(Guid userId, Guid entryId)
     {
         if (_data.TryGetValue(userId, out var userDict) && userDict.TryGetValue(entryId, out var entry))
