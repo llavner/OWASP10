@@ -1,0 +1,6 @@
+@OWASP3_HostAddress = http://localhost:5255
+
+GET {{OWASP3_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

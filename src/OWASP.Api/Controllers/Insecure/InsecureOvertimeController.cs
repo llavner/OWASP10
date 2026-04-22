@@ -1,5 +1,6 @@
 namespace OWASP.Api.Controllers.Insecure;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using OWASP.Api.Attributes;
@@ -9,7 +10,7 @@ using OWASP.Application.Services;
 
 [Route("api/insecure/[controller]")]
 [ApiController]
-[RequireInsecureDemosEnabled]
+[AllowAnonymous]
 public class InsecureOvertimeController : ControllerBase
 {
     private readonly InsecureOvertimeEntryService _service;
