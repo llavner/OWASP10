@@ -1,5 +1,6 @@
 namespace OWASP.Api.Controllers.Secure;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using OWASP.Application.Dtos;
@@ -8,6 +9,7 @@ using OWASP.Application.Services;
 
 [Route("api/secure/[controller]")]
 [ApiController]
+[AllowAnonymous]
 public class SecureOvertimeController : ControllerBase
 {
     private readonly SecureOvertimeEntryService _service;
