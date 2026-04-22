@@ -7,7 +7,7 @@ builder.AddCosmosDb();
 
 builder.Services.AddHealthChecks();
 builder.Services.AddApiRepositories();
-
+builder.Services.AddAuthorization();
 builder.Services.AddSecureServices();
 builder.Services.AddInsecureServices();
 
@@ -22,6 +22,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 app.MapControllers();
