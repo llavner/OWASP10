@@ -1,10 +1,9 @@
+namespace OWASP3.Api;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi;
 
 using OWASP.Application.Handlers;
-
-namespace OWASP3.Api;
 
 public static class Setup
 {
@@ -25,34 +24,6 @@ public static class Setup
             .RequireAuthenticatedUser()
             .Build())
             .AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-
-        return services;
-    }
-
-    public static IServiceCollection AddSwaggerGenServices(this IServiceCollection services)
-    {
-        services.AddSwaggerGen(c =>
-        {
-            // 1) Demo UserId header -> ger en input i Swagger "Authorize"
-            c.AddSecurityDefinition("DemoUserId", new OpenApiSecurityScheme
-            {
-                Description = "Demo header auth. Skriv t.ex. user-a eller user-b.",
-                Name = "X-Demo-UserId",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "DemoUserId",
-            });
-
-            // 2) Demo Role header (valfri) -> Admin för admin-endpoints
-            c.AddSecurityDefinition("DemoRole", new OpenApiSecurityScheme
-            {
-                Description = "Valfri roll. Skriv t.ex. Admin för att passera AdminOnly policy.",
-                Name = "X-Demo-Role",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "DemoRole",
-            });
-        });
 
         return services;
     }

@@ -1,42 +1,54 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace OWASP3.Api.Controllers;
+
+using System.Security.Claims;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+using OWASP.Infrastructure.Repository;
 
 [Route("api/[controller]")]
 [ApiController]
-public class OrdersController : ControllerBase
+public sealed class OrdersController(InMemoryStore store) : ControllerBase
 {
-    // GET: api/<OrdersController>
-    [HttpGet]
-    public IEnumerable<string> Get()
+    private readonly InMemoryStore _store = store;
+
+    // A01 - Vulnerable: IDOR (ingen ägarskapskontroll)
+    [Authorize]
+    [HttpGet("/api/vulnerable/orders/{orderId:int}")]
+    public IActionResult GetVulnerable(int orderId)
     {
-        return new string[] { "value1", "value2" };
+        if (!_store.Orders.TryGetValue(orderId, out var order))
+        {
+            return NotFound();
+        }
+
+        // VULNERABLE: returnerar alltid ordern, oavsett vem som äger den
+        return Ok(order);
     }
 
-    // GET api/<OrdersController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
+    // A01 - Fixed: object-level authorization (ägarskapskontroll)
+    [Authorize]
+    [HttpGet("/api/fixed/orders/{orderId:int}")]
+    public IActionResult GetFixed(int orderId)
     {
-        return "value";
-    }
+        if (!_store.Orders.TryGetValue(orderId, out var order))
+        {
+            return NotFound();
+        }
 
-    // POST api/<OrdersController>
-    [HttpPost]
-    public void Post([FromBody] string value)
-    {
-    }
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-    // PUT api/<OrdersController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
-    {
-    }
+        if (string.IsNullOrWhiteSpace(currentUserId))
+        {
+            return Unauthorized(); // borde inte hända om auth funkar, men bra guard
+        }
 
-    // DELETE api/<OrdersController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
+        if (!string.Equals(order.UserId, currentUserId, StringComparison.Ordinal))
+        {
+            return Forbid(); // alternativ: NotFound() för att inte “läcka existens”
+        }
+
+        return Ok(order);
     }
 }

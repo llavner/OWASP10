@@ -1,6 +1,6 @@
 namespace OWASP.Domain.Models;
 
-public class OvertimeEntry(Guid id, Guid userId, DateTime date, decimal minutes, string description, OvertimeCategory category, DateTimeOffset createdAt, DateTimeOffset updatedAt)
+public sealed class OvertimeEntry(Guid id, Guid userId, DateTime date, decimal minutes, string description, OvertimeCategory category, DateTimeOffset createdAt, DateTimeOffset updatedAt)
 {
     public Guid Id { get; set; } = id;
 
