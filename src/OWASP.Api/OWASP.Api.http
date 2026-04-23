@@ -1,6 +1,0 @@
-@OWASP.Api_HostAddress = http://localhost:5290
-
-GET {{OWASP.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

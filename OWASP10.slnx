@@ -1,7 +1,7 @@
 <Solution>
-  <Project Path="src/OWASP.Api/OWASP.Api.csproj" Id="c1725272-89f8-4a64-9fba-021a7b415866" />
   <Project Path="src/OWASP.Application/OWASP.Application.csproj" Id="483e9719-ad52-4bb4-8dd4-244fc787f9ca" />
   <Project Path="src/OWASP.Domain/OWASP.Domain.csproj" Id="ef2ac6dc-ef8d-4c89-948e-3d28b1aa89da" />
+  <Project Path="src/OWASP.Gui/OWASP.Gui.csproj" Id="fa1abb18-73d1-47af-9970-5e6a6f1a9b48" />
   <Project Path="src/OWASP.Infrastructure/OWASP.Infrastructure.csproj" Id="3d13772a-9196-4419-befc-bb8138335799" />
   <Project Path="src/OWASP3.Api/OWASP3.Api.csproj" Id="97264b1f-4d8b-4c64-9f1a-452b9a1fd077" />
   <Project Path="test/OWASP.tests/OWASP.tests.csproj" Id="d5399312-c5ce-487f-9ce6-293ea5ebdf72" />
