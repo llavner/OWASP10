@@ -1,7 +1,75 @@
-﻿@page "/"
+@page "/"
 
-<PageTitle>Home</PageTitle>
+<section class="lp-band lp-hero">
+    <MudContainer MaxWidth="MaxWidth.Large" Gutters="false" Class="lp-section-lg">
+        <MudGrid AlignItems="AlignItems.Center" Spacing="4">
+            <MudItem xs="12" md="7">
+                <MudText Typo="Typo.h2" GutterBottom Class="lp-on-dark">
+                    OWASP Top 10 – säkrare webb och API:er i .NET
+                </MudText>
 
-<h1>Hello, world!</h1>
+                <MudText Typo="Typo.h6" Class="lp-on-dark-muted">
+                    Praktiska exempel, realistiska scenarier och checklistor för utveckling, kodgranskning och driftsättning.
+                </MudText>
 
-Welcome to your new app.
+                <MudStack Row="true" Spacing="1" Class="mt-4" AlignItems="AlignItems.Center">
+                    <MudChip T="string" Text="A01 Broken Access Control" Color="Color.Primary" Variant="Variant.Filled" Label="true" />
+                    <MudChip T="string" Text="A02 Security Misconfiguration" Color="Color.Primary" Variant="Variant.Filled" Label="true" />
+                    <MudChip T="string" Text="A09 Logging & Alerting Failures" Color="Color.Primary" Variant="Variant.Filled" Label="true" />
+                </MudStack>
+
+                <MudStack Row="true" Spacing="2" Class="mt-6">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large"
+                               StartIcon="@Icons.Material.Filled.ArrowDownward"
+                               Href="#content">
+                        Läs om arbetet
+                    </MudButton>
+                </MudStack>
+            </MudItem>
+
+            <MudItem xs="12" md="5">
+                <MudPaper Elevation="8" Class="pa-5 lp-glass">
+                    <MudText Typo="Typo.h5" GutterBottom>Snabb översikt</MudText>
+                    <MudList T="string" Dense="true">
+                        <MudListItem Icon="@Icons.Material.Filled.Security">OWASP som ram</MudListItem>
+                        <MudListItem Icon="@Icons.Material.Filled.Code">.NET-nära exempel</MudListItem>
+                        <MudListItem Icon="@Icons.Material.Filled.TaskAlt">Checklistor inför release</MudListItem>
+                    </MudList>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</section>
+
+<MudContainer MaxWidth="MaxWidth.Large" Gutters="false" Class="lp-section">
+    <section id="content" class="lp-anchor">
+        <MudText Typo="Typo.h4" GutterBottom>Om examensarbetet</MudText>
+        <MudPaper Elevation="1" Class="pa-6 lp-rounded">
+            <MudText Typo="Typo.body1">
+                (Din text här…)
+            </MudText>
+        </MudPaper>
+    </section>
+</MudContainer>
+
+<section class="lp-band lp-cta">
+    <MudContainer MaxWidth="MaxWidth.Large" Gutters="false" Class="lp-section">
+        <section id="checklists" class="lp-anchor">
+            <MudGrid AlignItems="AlignItems.Center" Spacing="3">
+                <MudItem xs="12" md="8">
+                    <MudText Typo="Typo.h4" GutterBottom>Checklistor inför release</MudText>
+                    <MudText Typo="Typo.body1" Class="mud-text-secondary">
+                        Praktiska punkter för utveckling, kodgranskning och driftsättning.
+                    </MudText>
+                </MudItem>
+                <MudItem xs="12" md="4" Class="d-flex justify-end">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large"
+                               StartIcon="@Icons.Material.Filled.Checklist"
+                               Href="/checklists">
+                        Öppna checklistor
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </section>
+    </MudContainer>
+</section>
