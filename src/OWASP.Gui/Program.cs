@@ -1,3 +1,5 @@
+using MudBlazor.Services;
+
 using OWASP.Gui;
 using OWASP.Gui.Components;
 
@@ -8,6 +10,8 @@ builder.AddCosmosDb();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 

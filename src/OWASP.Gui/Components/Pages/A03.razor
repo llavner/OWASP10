@@ -1,0 +1,90 @@
+@page "/a09"
+@using MudBlazor
+
+<section class="lp-band lp-hero">
+    <MudContainer MaxWidth="MaxWidth.Large" Gutters="false" Class="lp-section-lg">
+        <MudText Typo="Typo.h3" GutterBottom Class="lp-on-dark">
+            A09 – Security Logging and Alerting Failures
+        </MudText>
+        <MudText Typo="Typo.h6" Class="lp-on-dark-muted">
+            När obehöriga försök upptäcks (t.ex. 403) men inte loggas/övervakas med tillräcklig kontext
+            för att möjliggöra alerting och incidenthantering.
+        </MudText>
+    </MudContainer>
+</section>
+
+<MudContainer MaxWidth="MaxWidth.Large" Gutters="false" Class="lp-section">
+    <MudGrid Spacing="3">
+        <MudItem xs="12" md="8">
+            <MudPaper Elevation="1" Class="pa-6 lp-rounded">
+                <MudText Typo="Typo.h5" GutterBottom>Sammanfattning</MudText>
+                <MudText Typo="Typo.body1" Paragraph="true">
+                    I demon returnerar en admin-endpoint <b>403 Forbidden</b> för användare utan admin-roll.
+                    Problemet är inte själva blockeringen – utan att loggningen är för svag: den saknar kontext som
+                    användare, endpoint, IP-adress och traceId.
+                </MudText>
+
+                <MudText Typo="Typo.body1">
+                    Utan bra loggning blir det svårt att upptäcka brute force, försök till privilege escalation,
+                    och att göra efteranalys (forensics) om något händer.
+                </MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="1" Class="pa-6 lp-rounded">
+                <MudText Typo="Typo.h6" GutterBottom>Riskbedömning</MudText>
+
+                <MudStack Spacing="1">
+                    <MudText Typo="Typo.body2"><b>Sannolikhet:</b> Medel</MudText>
+                    <MudText Typo="Typo.body2"><b>Konsekvens:</b> Medel–Hög</MudText>
+                </MudStack>
+
+                <MudDivider Class="my-4" />
+
+                <MudText Typo="Typo.body2" Class="mud-text-secondary">
+                    Obefogade försök mot adminfunktioner är vanliga – men utan rätt signaler i loggarna missas de lätt.
+                </MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudCard Class="lp-rounded">
+                <MudCardContent Class="pa-6">
+                    <MudText Typo="Typo.h6" GutterBottom>Åtgärd (fix)</MudText>
+                    <MudText Typo="Typo.body1" Paragraph="true">
+                        I “fixed”-varianten loggas ett tydligt <i>security event</i> vid nekad åtkomst med relevant kontext,
+                        t.ex. <code>userId</code>, <code>ip</code>, <code>path</code> och <code>traceId</code>.
+                        Klienten får fortfarande <b>403</b>, men servern får spårbarhet och underlag för övervakning/alerting.
+                    </MudText>
+
+                    <MudDivider Class="my-4" />
+
+                    <MudText Typo="Typo.h6" GutterBottom>Evidence (test/bevis)</MudText>
+                    <MudList T="string" Dense="true">
+                        <MudListItem>
+                            Båda endpoints: anrop utan admin-roll ger <b>403</b>.
+                        </MudListItem>
+                        <MudListItem>
+                            Endast fixed endpoint: producerar en tydlig loggrad (security event) med kontext.
+                        </MudListItem>
+                        <MudListItem>
+                            Fixed endpoint: anrop med admin-roll kan ge <b>200 OK</b>.
+                        </MudListItem>
+                    </MudList>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudPaper Elevation="1" Class="pa-6 lp-rounded">
+                <MudText Typo="Typo.h6" GutterBottom>Verkligt exempel</MudText>
+                <MudText Typo="Typo.body1">
+                    <b>Marriott/Starwood</b> (upptäckt 2018, intrång sedan 2014) är ett exempel där obehörig åtkomst kunde pågå
+                    länge innan den upptäcktes. Det illustrerar varför det inte räcker att “bara” blockera – man behöver även
+                    loggning, spårbarhet och övervakning som kan trigga larm i tid.
+                </MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>

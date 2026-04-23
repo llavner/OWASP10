@@ -1,0 +1,75 @@
+/* Shared page styling for Landing + A01/A02/A09 */
+
+/* Matchar din MainLayout: <article class="content px-4"> + media query padding */
+:root {
+    /* Mobil: Bootstrap px-4 ~= 1.5rem */
+    --content-pad-left: 1.5rem;
+    --content-pad-right: 1.5rem;
+    /* Din sticky top-row */
+    --toprow-height: 3.5rem;
+    /* Små design-tokens */
+    --lp-radius: 16px;
+}
+
+@media (min-width: 641px) {
+    :root {
+        /* Desktop: från din CSS: .top-row, article { padding-left:2rem; padding-right:1.5rem } */
+        --content-pad-left: 2rem;
+        --content-pad-right: 1.5rem;
+    }
+}
+
+/* Fullbredds-“band” trots att vi ligger inne i article med padding */
+.lp-band {
+    margin-left: calc(-1 * var(--content-pad-left));
+    margin-right: calc(-1 * var(--content-pad-right));
+    padding-left: var(--content-pad-left);
+    padding-right: var(--content-pad-right);
+}
+
+/* Ankarlänkar som inte hamnar under sticky top-row */
+.lp-anchor {
+    scroll-margin-top: calc(var(--toprow-height) + 12px);
+}
+
+/* Sektioner */
+.lp-hero {
+    background: radial-gradient(900px circle at 20% 10%, rgba(25,118,210,.35), transparent 55%), radial-gradient(700px circle at 90% 20%, rgba(0,200,83,.18), transparent 45%), linear-gradient(180deg, rgba(18,18,18,.92), rgba(18,18,18,.72));
+}
+
+.lp-cta {
+    background: linear-gradient(90deg, rgba(25,118,210,.10), rgba(0,0,0,0));
+    border-top: 1px solid rgba(0,0,0,.08);
+}
+
+.lp-section {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+}
+
+.lp-section-lg {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+/* Typografi på mörk bakgrund */
+.lp-on-dark {
+    color: rgba(255,255,255,.95);
+}
+
+.lp-on-dark-muted {
+    color: rgba(255,255,255,.78);
+}
+
+/* “Glas”-kort */
+.lp-glass {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.14);
+    backdrop-filter: blur(10px);
+    border-radius: var(--lp-radius);
+}
+
+/* Små helpers */
+.lp-rounded {
+    border-radius: var(--lp-radius);
+}
