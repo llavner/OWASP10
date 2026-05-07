@@ -1,0 +1,6 @@
+@OWASP.Identity_HostAddress = http://localhost:5143
+
+GET {{OWASP.Identity_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
