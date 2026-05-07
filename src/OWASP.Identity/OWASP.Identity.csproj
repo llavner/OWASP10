@@ -21,7 +21,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\OWASP.Application\OWASP.Application.csproj" />
     <ProjectReference Include="..\OWASP.Infrastructure\OWASP.Infrastructure.csproj" />
