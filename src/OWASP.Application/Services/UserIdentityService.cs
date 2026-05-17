@@ -44,7 +44,7 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
         var user = await repo.LoadRecordByEmailAsync<User>(email);
 
         if (user is null)
-        {
+    {
             return null;
         }
 
@@ -57,6 +57,7 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
 
         //user.Token = GenerateToken();
         user.LastActive = DateTime.Now.ToString();
+
         await repo.UpsertRecordsAsync(user);
 
         return user;
