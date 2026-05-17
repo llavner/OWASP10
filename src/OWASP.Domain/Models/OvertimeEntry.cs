@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 public class OvertimeEntry : ICosmosEntity
 {
     [JsonPropertyName("id")]
-    public Guid Id { get; set; }
+    public string id { get; set; }
 
     public string UserId { get; set; } = string.Empty;
 

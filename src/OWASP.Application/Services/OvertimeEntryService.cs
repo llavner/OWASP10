@@ -10,7 +10,7 @@ public class OvertimeEntryService(IOvertimeEntryRepository repo) : IOvertimeEntr
     {
         var newEntry = new OvertimeEntry()
         {
-             Id = Guid.NewGuid().ToString(),
+             id = Guid.NewGuid().ToString(),
              UserId = userId,
              StartDate = request.StartDate,
              EndDate = request.EndDate,
@@ -20,7 +20,7 @@ public class OvertimeEntryService(IOvertimeEntryRepository repo) : IOvertimeEntr
 
         await repo.UpsertRecordsAsync<OvertimeEntry>(newEntry);
 
-        return $"New entry with Id: {newEntry.Id} added succesfully.";
+        return $"New entry with Id: {newEntry.id} added succesfully.";
     }
 
     public async Task<OvertimeEntry?> GetEntryByIdAsync(string userId, OvertimeEntryRequest request)
