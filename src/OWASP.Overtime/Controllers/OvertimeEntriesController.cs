@@ -28,4 +28,19 @@ public class OvertimeEntriesController(IOvertimeEntryService service) : Controll
 
         return Ok(new { EntryId = entryId });
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllForUser()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                  ?? User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var entries = await service.GetAllEntriesAsync(userId);
+        return Ok(entries);
+    }
 }

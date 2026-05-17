@@ -99,7 +99,7 @@ public class UsersController(IUserIdentityService service, IOptions<JwtSettings>
             issuer: _jwtSettings.Issuer,
             audience: _jwtSettings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
+            expires: DateTime.UtcNow.AddMinutes(10),
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

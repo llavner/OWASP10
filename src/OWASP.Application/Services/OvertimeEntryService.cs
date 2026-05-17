@@ -33,4 +33,11 @@ public class OvertimeEntryService(IOvertimeEntryRepository repo) : IOvertimeEntr
 
         return user;
     }
+
+    public async Task<List<OvertimeEntry>> GetAllEntriesAsync(string userId)
+    {
+        var entries = await repo.LoadRecordsAsync<OvertimeEntry>();
+
+        return entries.Where(x => x.UserId.ToString() == userId).ToList();
+    }
 }
