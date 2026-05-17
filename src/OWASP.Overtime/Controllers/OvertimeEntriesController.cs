@@ -28,16 +28,4 @@ public class OvertimeEntriesController(IOvertimeEntryService service) : Controll
 
         return Ok(new { EntryId = entryId });
     }
-
-    [HttpGet]
-    public IActionResult Get()
-    {
-        return Ok("Controller is reachable");
-    }
-
-    [HttpPost("debug")]
-    public IActionResult Debug()
-    {
-        return Ok(User.Claims.Select(c => new { c.Type, c.Value }));
-    }
 }

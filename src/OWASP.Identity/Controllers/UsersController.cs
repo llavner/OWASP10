@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using OWASP.Application.Dtos;
 using OWASP.Application.Interfaces;
 using OWASP.Domain.Models;
+using OWASP.Identity.Settings;
 
 [Route("api/[controller]")]
 [ApiController]

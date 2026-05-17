@@ -1,10 +1,10 @@
+namespace OWASP.Infrastructure.Repository;
+
 using Microsoft.Azure.Cosmos;
 
 using OWASP.Application.Interfaces;
 using OWASP.Domain.Interfaces;
 using OWASP.Infrastructure.DataAccess;
-
-namespace OWASP.Infrastructure.Repository;
 
 public class OvertimeEntryRepository(OvertimeEntryDbContext cosmosDb) : IOvertimeEntryRepository
 {
@@ -18,9 +18,7 @@ public class OvertimeEntryRepository(OvertimeEntryDbContext cosmosDb) : IOvertim
             throw new ArgumentException("UserId must not be null or empty for partition key.");
         }
 
-        System.Diagnostics.Debug.WriteLine($"Upserting with UserId: {record.UserId}");
-
-        await _cosmosDb.Container.UpsertItemAsync(record, new PartitionKey(record.UserId.ToString()));
+        await _cosmosDb.Container.UpsertItemAsync(record);
     }
 
     public async Task<List<T>> LoadRecordsAsync<T>()

@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using OWASP.Application.Interfaces;
 using OWASP.Application.Services;
 using OWASP.Infrastructure.Repository;
-using OWASP.Overtime;
+using OWASP.Overtime.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
