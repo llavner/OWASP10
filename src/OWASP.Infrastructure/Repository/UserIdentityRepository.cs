@@ -1,13 +1,13 @@
+namespace OWASP.Infrastructure.Repository;
+
 using Microsoft.Azure.Cosmos;
 
 using OWASP.Application.Interfaces;
 using OWASP.Infrastructure.DataAccess;
 
-namespace OWASP.Infrastructure.Repository;
-
-public class UserIdentityRepository(CosmosDbContext cosmosDb) : IUserIdentityRepository
+public class UserIdentityRepository(IdentityDbContext cosmosDb) : IUserIdentityRepository
 {
-    private readonly CosmosDbContext _cosmosDb = cosmosDb;
+    private readonly IdentityDbContext _cosmosDb = cosmosDb;
 
     public async Task UpsertRecordsAsync<T>(T record)
     {
@@ -51,7 +51,7 @@ public class UserIdentityRepository(CosmosDbContext cosmosDb) : IUserIdentityRep
 
         while (feedIterator.HasMoreResults)
         {
-            FeedResponse<T> currentResultSet = await feedIterator.ReadNextAsync();
+            var currentResultSet = await feedIterator.ReadNextAsync();
 
             foreach (var record in currentResultSet)
             {
@@ -59,6 +59,8 @@ public class UserIdentityRepository(CosmosDbContext cosmosDb) : IUserIdentityRep
             }
         }
 
-        throw new Exception("Record not found.");
+        //throw new Exception("Record not found.");
+
+        return default;
     }
 }
