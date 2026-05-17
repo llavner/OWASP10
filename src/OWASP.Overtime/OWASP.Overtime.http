@@ -1,0 +1,6 @@
+@OWASP.Overtime_HostAddress = http://localhost:5198
+
+GET {{OWASP.Overtime_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
