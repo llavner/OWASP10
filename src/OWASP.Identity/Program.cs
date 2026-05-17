@@ -1,6 +1,6 @@
 using OWASP.Application.Interfaces;
 using OWASP.Application.Services;
-using OWASP.Identity;
+using OWASP.Identity.Settings;
 using OWASP.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);

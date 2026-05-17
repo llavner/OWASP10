@@ -2,7 +2,7 @@ namespace OWASP.Domain.Interfaces;
 
 public interface ICosmosEntity
 {
-    Guid Id { get; }
+    string id { get; }
 
-    Guid UserId { get; }
+    string UserId { get; }
 }

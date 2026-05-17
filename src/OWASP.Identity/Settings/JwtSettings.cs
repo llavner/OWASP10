@@ -1,4 +1,4 @@
-namespace OWASP.Overtime;
+namespace OWASP.Identity.Settings;
 
 public class JwtSettings
 {

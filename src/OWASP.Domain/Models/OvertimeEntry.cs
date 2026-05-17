@@ -1,8 +1,13 @@
+using OWASP.Domain.Interfaces;
+
 namespace OWASP.Domain.Models;
 
-public class OvertimeEntry
+using System.Text.Json.Serialization;
+
+public class OvertimeEntry : ICosmosEntity
 {
-    public string Id { get; set; } = string.Empty;
+    [JsonPropertyName("id")]
+    public string id { get; set; } = Guid.NewGuid().ToString();
 
     public string UserId { get; set; } = string.Empty;
 

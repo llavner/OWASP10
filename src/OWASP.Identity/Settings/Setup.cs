@@ -1,4 +1,4 @@
-namespace OWASP.Overtime;
+namespace OWASP.Identity.Settings;
 
 using Azure.Identity;
 
@@ -6,16 +6,16 @@ using OWASP.Infrastructure.DataAccess;
 
 public static class Setup
 {
-    public static void AddOvertimeEntryDb(this WebApplicationBuilder builder)
+    public static void AddIdentityDb(this WebApplicationBuilder builder)
     {
-        builder.Services.AddSingleton<OvertimeEntryDbContext>(provider =>
+        builder.Services.AddSingleton<IdentityDbContext>(provider =>
         {
             var config = builder.Configuration.GetSection("CosmosDb");
-            var cosmosDb = new OvertimeEntryDbContext(
-                config["EndpointUrl"],
-                config["PrimaryKey"],
-                config["DatabaseName"],
-                config["OvertimeEntryContainerName"]);
+            var cosmosDb = new IdentityDbContext(
+                config["EndpointUrl"]!,
+                config["PrimaryKey"]!,
+                config["DatabaseName"]!,
+                config["IdentityContainerName"]!);
 
             return cosmosDb;
         });
