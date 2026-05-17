@@ -1,8 +1,11 @@
+using OWASP.Domain.Interfaces;
+
 namespace OWASP.Application.Interfaces;
 
 public interface IOvertimeEntryRepository
 {
-    Task UpsertRecordsAsync<T>(T record);
+    Task UpsertRecordsAsync<T>(T record)
+        where T : ICosmosEntity;
 
     Task<List<T>> LoadRecordsAsync<T>();
 

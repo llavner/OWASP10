@@ -1,6 +1,7 @@
 using Microsoft.Azure.Cosmos;
 
 using OWASP.Application.Interfaces;
+using OWASP.Domain.Interfaces;
 using OWASP.Infrastructure.DataAccess;
 
 namespace OWASP.Infrastructure.Repository;
@@ -9,7 +10,18 @@ public class OvertimeEntryRepository(OvertimeEntryDbContext cosmosDb) : IOvertim
 {
     private readonly OvertimeEntryDbContext _cosmosDb = cosmosDb;
 
-    public async Task UpsertRecordsAsync<T>(T record) => await _cosmosDb.Container.UpsertItemAsync(record);
+    public async Task UpsertRecordsAsync<T>(T record)
+    where T : ICosmosEntity
+    {
+        if (string.IsNullOrEmpty(record.UserId.ToString()))
+        {
+            throw new ArgumentException("UserId must not be null or empty for partition key.");
+        }
+
+        System.Diagnostics.Debug.WriteLine($"Upserting with UserId: {record.UserId}");
+
+        await _cosmosDb.Container.UpsertItemAsync(record, new PartitionKey(record.UserId.ToString()));
+    }
 
     public async Task<List<T>> LoadRecordsAsync<T>()
     {
@@ -56,8 +68,6 @@ public class OvertimeEntryRepository(OvertimeEntryDbContext cosmosDb) : IOvertim
             }
         }
 
-        //throw new Exception("Record not found.");
-
-        return default;
+        return default!;
     }
 }
