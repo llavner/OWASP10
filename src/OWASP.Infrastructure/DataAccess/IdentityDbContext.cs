@@ -1,8 +1,8 @@
-namespace OWASP.Infrastructure.DataAccess;
-
 using Microsoft.Azure.Cosmos;
 
-public class CosmosDbContext
+namespace OWASP.Infrastructure.DataAccess;
+
+public class IdentityDbContext
 {
     private readonly string _endpointUrl;
     private readonly string _primaryKey;
@@ -11,9 +11,7 @@ public class CosmosDbContext
     private readonly CosmosClient _cosmosClient;
     private readonly Database _database;
 
-    public Container Container { get; }
-
-    public CosmosDbContext(string endpointUrl, string primaryKey, string databaseName, string containerName)
+    public IdentityDbContext(string endpointUrl, string primaryKey, string databaseName, string containerName)
     {
         _endpointUrl = endpointUrl;
         _primaryKey = primaryKey;
@@ -25,4 +23,6 @@ public class CosmosDbContext
 
         Container = _database.GetContainer(_containerName);
     }
+
+    public Container Container { get; }
 }

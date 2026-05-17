@@ -1,21 +1,20 @@
 namespace OWASP.Identity;
 
 using Azure.Identity;
-
 using OWASP.Infrastructure.DataAccess;
 
 public static class Setup
 {
-    public static void AddCosmosDb(this WebApplicationBuilder builder)
+    public static void AddIdentityDb(this WebApplicationBuilder builder)
     {
-        builder.Services.AddSingleton<CosmosDbContext>(provider =>
+        builder.Services.AddSingleton<IdentityDbContext>(provider =>
         {
             var config = builder.Configuration.GetSection("CosmosDb");
-            var cosmosDb = new CosmosDbContext(
+            var cosmosDb = new IdentityDbContext(
                 config["EndpointUrl"],
                 config["PrimaryKey"],
                 config["DatabaseName"],
-                config["ContainerName"]);
+                config["IdentityContainerName"]);
 
             return cosmosDb;
         });
