@@ -1,6 +1,7 @@
 namespace OWASP.Identity;
 
 using Azure.Identity;
+
 using OWASP.Infrastructure.DataAccess;
 
 public static class Setup
