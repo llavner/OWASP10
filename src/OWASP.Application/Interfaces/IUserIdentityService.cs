@@ -11,7 +11,7 @@ public interface IUserIdentityService
 
     Task<User?> GetUserByEmail(string email);
 
-    Task<string?> Login(string username, string password);
+    Task<User?> Login(string username, string password);
 
     Task<string> Register(RegisterRequest regReq);
 }

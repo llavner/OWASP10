@@ -1,18 +1,15 @@
-namespace OWASP.Infrastructure.Repository;
-
 using Microsoft.Azure.Cosmos;
 
 using OWASP.Application.Interfaces;
 using OWASP.Infrastructure.DataAccess;
 
-public class UserIdentityRepository(IdentityDbContext cosmosDb) : IUserIdentityRepository
-{
-    private readonly IdentityDbContext _cosmosDb = cosmosDb;
+namespace OWASP.Infrastructure.Repository;
 
-    public async Task UpsertRecordsAsync<T>(T record)
-    {
-        await _cosmosDb.Container.UpsertItemAsync(record);
-    }
+public class OvertimeEntryRepository(OvertimeEntryDbContext cosmosDb) : IOvertimeEntryRepository
+{
+    private readonly OvertimeEntryDbContext _cosmosDb = cosmosDb;
+
+    public async Task UpsertRecordsAsync<T>(T record) => await _cosmosDb.Container.UpsertItemAsync(record);
 
     public async Task<List<T>> LoadRecordsAsync<T>()
     {

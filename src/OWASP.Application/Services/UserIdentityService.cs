@@ -20,7 +20,10 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
     public async Task<User?> GetUserByToken(string token)
     {
         var user = await repo.LoadRecordByTokenAsync<User>(token);
-        if (user is null) return null;
+        if (user is null)
+        {
+            return null;
+        }
 
         return user;
     }
@@ -28,21 +31,22 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
     public async Task<User?> GetUserByEmail(string email)
     {
         var user = await repo.LoadRecordByEmailAsync<User>(email);
-        if (user is null) return null;
+        if (user is null)
+        {
+            return null;
+        }
 
         return user;
     }
 
-    private string GenerateToken()
-    {
-        return Guid.NewGuid().ToString();
-    }
-
-    public async Task<string?> Login(string email, string password)
+    public async Task<User?> Login(string email, string password)
     {
         var user = await repo.LoadRecordByEmailAsync<User>(email);
 
-        if (user is null) return null;
+        if (user is null)
+    {
+            return null;
+        }
 
         var isValid = passwordHasher.VerifyHash(password, user.PasswordHash);
 
@@ -51,12 +55,12 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
             return null;
         }
 
-        user.Token = GenerateToken();
+        //user.Token = GenerateToken();
         user.LastActive = DateTime.Now.ToString();
 
         await repo.UpsertRecordsAsync(user);
 
-        return user.Token;
+        return user;
     }
 
     public async Task<string> Register(RegisterRequest req)
@@ -74,4 +78,6 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
 
         return $"{newUser.UserName} added succesfully.";
     }
+
+    //private static string GenerateToken() => Guid.NewGuid().ToString();
 }

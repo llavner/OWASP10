@@ -1,34 +1,25 @@
 namespace OWASP.Identity.Controllers;
 
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 using OWASP.Application.Dtos;
 using OWASP.Application.Interfaces;
+using OWASP.Domain.Models;
 
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class UsersController(IUserIdentityService service) : ControllerBase
+public class UsersController(IUserIdentityService service, IOptions<JwtSettings> jwtOptions) : ControllerBase
 {
     private readonly IUserIdentityService _service = service;
-
-    //[HttpGet("profile")]
-    //public async Task<ActionResult<ProfileResponse>> GetUserProfile([FromHeader] string token, [FromQuery] string userName)
-    //{
-    //    if (string.IsNullOrWhiteSpace(token)) return Unauthorized();
-
-    //    var userToken = await _service.GetUserByToken(token);
-    //    if (userToken is null) return Unauthorized();
-
-    //    var user = await _service.GetUserByName(userName);
-
-    //    if (user is null) return NotFound();
-
-    //    var profile = await _service.GetProfile(user);
-
-    //    return Ok(profile);
-    //}
+    private readonly JwtSettings _jwtSettings = jwtOptions.Value;
 
     [HttpPost("login")]
     [AllowAnonymous]
@@ -39,12 +30,14 @@ public class UsersController(IUserIdentityService service) : ControllerBase
             return BadRequest("Missing credentials.");
         }
 
-        var token = await _service.Login(req.EmailAddress, req.Password);
+        var user = await _service.Login(req.EmailAddress, req.Password);
 
-        if (token is null)
+        if (user is null)
         {
             return Unauthorized("Invalid credentials.");
         }
+
+        var token = GenerateJwtToken(user);
 
         return Ok(new { Token = token });
     }
@@ -69,6 +62,7 @@ public class UsersController(IUserIdentityService service) : ControllerBase
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterRequest regReq)
     {
         var userEmail = await _service.GetUserByEmail(regReq.EmailAddress);
@@ -87,5 +81,26 @@ public class UsersController(IUserIdentityService service) : ControllerBase
         await _service.Register(regReq);
 
         return Ok($"{regReq.UserName} successfully registered.");
+    }
+
+    private string GenerateJwtToken(User user)
+    {
+        var claims = new[]
+        {
+        new Claim(JwtRegisteredClaimNames.Sub, user.id),
+        new Claim(ClaimTypes.Name, user.UserName),
+        };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: _jwtSettings.Issuer,
+            audience: _jwtSettings.Audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(1),
+            signingCredentials: creds);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

@@ -6,11 +6,13 @@ using OWASP.Infrastructure.Repository;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddKeyVaultSecrets();
-builder.AddCosmosDb();
+builder.AddIdentityDb();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
 builder.Services.AddScoped<IUserIdentityService, UserIdentityService>();
 builder.Services.AddScoped<IHashService, HashingService>();
@@ -19,7 +21,6 @@ builder.Services.AddScoped<IUserIdentityRepository, UserIdentityRepository>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
