@@ -59,8 +59,6 @@ public class UserIdentityRepository(IdentityDbContext cosmosDb) : IUserIdentityR
             }
         }
 
-        //throw new Exception("Record not found.");
-
-        return default;
+        return default!;
     }
 }
