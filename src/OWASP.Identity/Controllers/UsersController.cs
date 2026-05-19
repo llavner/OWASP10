@@ -31,55 +31,41 @@ public class UsersController(IUserIdentityService service, IOptions<JwtSettings>
             return BadRequest("Missing credentials.");
         }
 
-        var user = await _service.Login(req.EmailAddress, req.Password);
+        var result = await _service.Login(req.EmailAddress, req.Password);
 
-        if (user is null)
+        if (!result.IsSuccess || result.Value is null)
         {
-            return Unauthorized("Invalid credentials.");
+            return Unauthorized(result.Error);
         }
 
-        var token = GenerateJwtToken(user);
+        var token = GenerateJwtToken(result.Value);
 
         return Ok(new { Token = token });
-    }
-
-    [HttpGet("validate")]
-    public async Task<ActionResult> ValidateToken([FromQuery] string token)
-    {
-        var user = await _service.GetUserByToken(token);
-
-        if (user is null)
-        {
-            return NotFound();
-        }
-
-        var response = new ValidateRequest()
-        {
-            UserName = user.UserName,
-            IsOnline = true,
-        };
-
-        return Ok(response);
     }
 
     [HttpPost("register")]
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterRequest regReq)
     {
-        var userEmail = await _service.GetUserByEmail(regReq.EmailAddress);
-        var userName = await _service.GetUserByName(regReq.UserName);
+        var emailResult = await _service.GetUserByEmail(regReq.EmailAddress);
+        var nameResult = await _service.GetUserByName(regReq.UserName);
 
-        if (userEmail is not null)
+        if (emailResult.IsSuccess && emailResult.Value is not null)
         {
             return BadRequest($"{regReq.EmailAddress} already used.");
         }
 
-        if (userName is not null)
+        if (nameResult.IsSuccess && nameResult.Value is not null)
         {
             return BadRequest($"{regReq.UserName} already used.");
         }
 
-        await _service.Register(regReq);
+        var registerResult = await _service.Register(regReq);
+
+        if (!registerResult.IsSuccess)
+        {
+            return BadRequest(registerResult.Error);
+        }
 
         return Ok();
     }

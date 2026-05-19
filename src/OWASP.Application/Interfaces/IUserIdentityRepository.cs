@@ -10,7 +10,5 @@ public interface IUserIdentityRepository
 
     Task<T> LoadRecordByEmailAsync<T>(string email);
 
-    Task<T> LoadRecordByTokenAsync<T>(string token);
-
     Task<T> LoadRecordByUserNameAsync<T>(string userName);
 }

@@ -1,17 +1,18 @@
 namespace OWASP.Application.Interfaces;
 
+using OWASP.Application.Common;
 using OWASP.Application.Dtos;
 using OWASP.Domain.Models;
 
+using static OWASP.Application.Common.LoginResultCodes;
+
 public interface IUserIdentityService
 {
-    Task<User?> GetUserByName(string userName);
+    Task<Result<User, LoginResultCode>> GetUserByName(string userName);
 
-    Task<User?> GetUserByToken(string token);
+    Task<Result<User, LoginResultCode>> GetUserByEmail(string email);
 
-    Task<User?> GetUserByEmail(string email);
+    Task<Result<User, LoginResultCode>> Login(string username, string password);
 
-    Task<User?> Login(string username, string password);
-
-    Task Register(RegisterRequest regReq);
+    Task<Result<User, LoginResultCode>> Register(RegisterRequest regReq);
 }

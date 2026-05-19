@@ -39,8 +39,6 @@ public class UserIdentityRepository(IdentityDbContext cosmosDb) : IUserIdentityR
 
     public Task<T> LoadRecordByEmailAsync<T>(string email) => LoadRecordByPropertyAsync<T>("EmailAddress", email);
 
-    public Task<T> LoadRecordByTokenAsync<T>(string token) => LoadRecordByPropertyAsync<T>("Token", token);
-
     public Task<T> LoadRecordByUserNameAsync<T>(string userName) => LoadRecordByPropertyAsync<T>("UserName", userName);
 
     private async Task<T> LoadRecordByPropertyAsync<T>(string propertyName, string value)
