@@ -1,10 +1,12 @@
 namespace OWASP.Application.Services;
 
+using Microsoft.Extensions.Logging;
+
 using OWASP.Application.Dtos;
 using OWASP.Application.Interfaces;
 using OWASP.Domain.Models;
 
-public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepository repo) : IUserIdentityService
+public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepository repo, ILogger<UserIdentityService> logger) : IUserIdentityService
 {
     public async Task<User?> GetUserByName(string userName)
     {
@@ -44,7 +46,8 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
         var user = await repo.LoadRecordByEmailAsync<User>(email);
 
         if (user is null)
-    {
+        {
+            logger.LogWarning("Login failed: user not found for email {Email}", email);
             return null;
         }
 
@@ -52,18 +55,20 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
 
         if (!isValid)
         {
+            logger.LogWarning("Login failed: invalid password for email {Email}", email);
             return null;
         }
 
-        //user.Token = GenerateToken();
         user.LastActive = DateTime.Now.ToString();
 
         await repo.UpsertRecordsAsync(user);
 
+        logger.LogInformation("Login successful for user {User}", user.id);
+
         return user;
     }
 
-    public async Task<string> Register(RegisterRequest req)
+    public async Task Register(RegisterRequest req)
     {
         var newUser = new User()
         {
@@ -75,9 +80,5 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
         };
 
         await repo.UpsertRecordsAsync<User>(newUser);
-
-        return $"{newUser.UserName} added succesfully.";
     }
-
-    //private static string GenerateToken() => Guid.NewGuid().ToString();
 }
