@@ -81,7 +81,7 @@ public class UsersController(IUserIdentityService service, IOptions<JwtSettings>
 
         await _service.Register(regReq);
 
-        return Ok($"{regReq.UserName} successfully registered.");
+        return Ok();
     }
 
     private string GenerateJwtToken(User user)

@@ -7,5 +7,5 @@ public interface IOvertimeEntryService
 {
     Task<List<OvertimeEntry>> GetAllEntriesAsync(string userId);
 
-    Task<string> AddEntryAsync(string userId, OvertimeEntryRequest request);
+    Task AddEntryAsync(string userId, OvertimeEntryRequest request);
 }

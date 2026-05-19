@@ -24,9 +24,9 @@ public class OvertimeEntriesController(IOvertimeEntryService service) : Controll
             return Unauthorized();
         }
 
-        var entryId = await service.AddEntryAsync(userId, request);
+        await service.AddEntryAsync(userId, request);
 
-        return Ok(new { EntryId = entryId });
+        return Ok();
     }
 
     [HttpGet]
