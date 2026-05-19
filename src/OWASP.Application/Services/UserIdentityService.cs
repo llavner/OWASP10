@@ -2,53 +2,45 @@ namespace OWASP.Application.Services;
 
 using Microsoft.Extensions.Logging;
 
+using OWASP.Application.Common;
 using OWASP.Application.Dtos;
 using OWASP.Application.Interfaces;
 using OWASP.Domain.Models;
 
+using static OWASP.Application.Common.LoginResultCodes;
+
 public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepository repo,IUserIdentityFactory factory, ILogger<UserIdentityService> logger) : IUserIdentityService
 {
-    public async Task<User?> GetUserByName(string userName)
+    public async Task<Result<User, LoginResultCode>> GetUserByName(string userName)
     {
         var user = await repo.LoadRecordByUserNameAsync<User>(userName);
         if (user is null)
         {
-            return null;
+            return Result<User, LoginResultCode>.Failure(LoginResultCode.UserNotFound, "User not found");
         }
 
-        return user;
+        return Result<User, LoginResultCode>.Success(user, LoginResultCode.Success);
     }
 
-    public async Task<User?> GetUserByToken(string token)
-    {
-        var user = await repo.LoadRecordByTokenAsync<User>(token);
-        if (user is null)
-        {
-            return null;
-        }
-
-        return user;
-    }
-
-    public async Task<User?> GetUserByEmail(string email)
+    public async Task<Result<User, LoginResultCode>> GetUserByEmail(string email)
     {
         var user = await repo.LoadRecordByEmailAsync<User>(email);
         if (user is null)
         {
-            return null;
+            return Result<User, LoginResultCode>.Failure(LoginResultCode.UserNotFound, "User not found");
         }
 
-        return user;
+        return Result<User, LoginResultCode>.Success(user, LoginResultCode.Success);
     }
 
-    public async Task<User?> Login(string email, string password)
+    public async Task<Result<User, LoginResultCode>> Login(string email, string password)
     {
         var user = await repo.LoadRecordByEmailAsync<User>(email);
 
         if (user is null)
         {
             logger.LogWarning("Login failed: user not found for email {Email}", email);
-            return null;
+            return Result<User, LoginResultCode>.Failure(LoginResultCode.UserNotFound, "User not found");
         }
 
         var isValid = passwordHasher.VerifyHash(password, user.PasswordHash);
@@ -56,7 +48,7 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
         if (!isValid)
         {
             logger.LogWarning("Login failed: invalid password for email {Email}", email);
-            return null;
+            return Result<User, LoginResultCode>.Failure(LoginResultCode.InvalidCredentials, "Invalid credentials.");
         }
 
         user.LastActive = DateTime.Now.ToString();
@@ -65,15 +57,17 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
 
         logger.LogInformation("Login successful for user {User}", user.id);
 
-        return user;
+        return Result<User, LoginResultCode>.Success(user, LoginResultCode.Success);
     }
 
-    public async Task Register(RegisterRequest req)
+    public async Task<Result<User, LoginResultCode>> Register(RegisterRequest req)
     {
         var passwordHash = passwordHasher.GenerateHash(req.Password);
 
         var newUser = factory.CreateUser(req, passwordHash);
 
         await repo.UpsertRecordsAsync<User>(newUser);
+
+        return Result<User, LoginResultCode>.Success(newUser, LoginResultCode.Success);
     }
 }
