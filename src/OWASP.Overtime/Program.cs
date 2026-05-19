@@ -13,6 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddKeyVaultSecrets();
 builder.AddOvertimeEntryDb();
 
+builder.Services.AddApplicationInsightsTelemetry(options =>
+{
+    options.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
+});
+
 builder.Services.AddTransient<IOvertimeEntryFactory, OvertimeEntryFactory>();
 
 builder.Services.AddScoped<IOvertimeEntryService, OvertimeEntryService>();

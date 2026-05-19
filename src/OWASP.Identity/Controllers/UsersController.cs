@@ -17,7 +17,10 @@ using OWASP.Identity.Settings;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class UsersController(IUserIdentityService service, IOptions<JwtSettings> jwtOptions) : ControllerBase
+public class UsersController(
+    IUserIdentityService service,
+    IOptions<JwtSettings> jwtOptions,
+    ILogger<UsersController> logger) : ControllerBase
 {
     private readonly IUserIdentityService _service = service;
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
@@ -28,6 +31,7 @@ public class UsersController(IUserIdentityService service, IOptions<JwtSettings>
     {
         if (string.IsNullOrWhiteSpace(req.EmailAddress) || string.IsNullOrWhiteSpace(req.Password))
         {
+            logger.LogWarning("SecurityEvent: LoginRejected_MissingCredentials");
             return BadRequest("Missing credentials.");
         }
 
@@ -35,11 +39,11 @@ public class UsersController(IUserIdentityService service, IOptions<JwtSettings>
 
         if (!result.IsSuccess || result.Value is null)
         {
+            logger.LogWarning("SecurityEvent: LoginRejected Result={Result}", result.Code);
             return Unauthorized(result.Error);
         }
 
         var token = GenerateJwtToken(result.Value);
-
         return Ok(new { Token = token });
     }
 

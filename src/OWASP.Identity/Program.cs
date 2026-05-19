@@ -9,6 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddKeyVaultSecrets();
 builder.AddIdentityDb();
 
+builder.Services.AddApplicationInsightsTelemetry(options =>
+{
+    options.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -9,7 +9,11 @@ using OWASP.Domain.Models;
 
 using static OWASP.Application.Common.LoginResultCodes;
 
-public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepository repo,IUserIdentityFactory factory, ILogger<UserIdentityService> logger) : IUserIdentityService
+public class UserIdentityService(
+    IHashService passwordHasher,
+    IUserIdentityRepository repo,
+    IUserIdentityFactory factory,
+    ILogger<UserIdentityService> logger) : IUserIdentityService
 {
     public async Task<Result<User, LoginResultCode>> GetUserByName(string userName)
     {
@@ -39,7 +43,7 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
 
         if (user is null)
         {
-            logger.LogWarning("Login failed: user not found for email {Email}", email);
+            logger.LogWarning("SecurityEvent: LoginFailed_UserNotFound Email={Email}", email);
             return Result<User, LoginResultCode>.Failure(LoginResultCode.UserNotFound, "User not found");
         }
 
@@ -47,27 +51,37 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
 
         if (!isValid)
         {
-            logger.LogWarning("Login failed: invalid password for email {Email}", email);
+            logger.LogWarning("SecurityEvent: LoginFailed_InvalidPassword Email={Email}", email);
             return Result<User, LoginResultCode>.Failure(LoginResultCode.InvalidCredentials, "Invalid credentials.");
         }
 
         user.LastActive = DateTime.Now.ToString();
-
         await repo.UpsertRecordsAsync(user);
 
-        logger.LogInformation("Login successful for user {User}", user.id);
+        logger.LogInformation("SecurityEvent: LoginSucceeded UserId={UserId}", user.id);
 
         return Result<User, LoginResultCode>.Success(user, LoginResultCode.Success);
     }
 
     public async Task<Result<User, LoginResultCode>> Register(RegisterRequest req)
     {
-        var passwordHash = passwordHasher.GenerateHash(req.Password);
+        logger.LogInformation("SecurityEvent: RegistrationAttempt Email={Email} UserName={UserName}", req.EmailAddress, req.UserName);
 
-        var newUser = factory.CreateUser(req, passwordHash);
+        try
+        {
+            var passwordHash = passwordHasher.GenerateHash(req.Password);
+            var newUser = factory.CreateUser(req, passwordHash);
 
-        await repo.UpsertRecordsAsync<User>(newUser);
+            await repo.UpsertRecordsAsync<User>(newUser);
 
-        return Result<User, LoginResultCode>.Success(newUser, LoginResultCode.Success);
+            logger.LogInformation("SecurityEvent: RegistrationSucceeded UserId={UserId}", newUser.id);
+
+            return Result<User, LoginResultCode>.Success(newUser, LoginResultCode.Success);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "SecurityEvent: RegistrationFailed Email={Email}", req.EmailAddress);
+            return Result<User, LoginResultCode>.Failure(LoginResultCode.UnknownError, "Registration failed.");
+        }
     }
 }
