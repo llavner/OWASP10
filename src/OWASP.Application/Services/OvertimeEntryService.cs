@@ -23,21 +23,5 @@ public class OvertimeEntryService(IOvertimeEntryRepository repo) : IOvertimeEntr
         return $"New entry with Id: {newEntry.id} added succesfully.";
     }
 
-    public async Task<OvertimeEntry?> GetEntryByIdAsync(string userId, OvertimeEntryRequest request)
-    {
-        var user = await repo.LoadRecordByTokenAsync<OvertimeEntry>(userId);
-        if (user is null)
-        {
-            return null;
-        }
-
-        return user;
-    }
-
-    public async Task<List<OvertimeEntry>> GetAllEntriesAsync(string userId)
-    {
-        var entries = await repo.LoadRecordsAsync<OvertimeEntry>();
-
-        return entries.Where(x => x.UserId.ToString() == userId).ToList();
-    }
+    public async Task<List<OvertimeEntry>> GetAllEntriesAsync(string userId) => await repo.LoadRecordsByUserIdAsync<OvertimeEntry>(userId);
 }
