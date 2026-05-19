@@ -6,7 +6,7 @@ using OWASP.Application.Dtos;
 using OWASP.Application.Interfaces;
 using OWASP.Domain.Models;
 
-public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepository repo, ILogger<UserIdentityService> logger) : IUserIdentityService
+public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepository repo,IUserIdentityFactory factory, ILogger<UserIdentityService> logger) : IUserIdentityService
 {
     public async Task<User?> GetUserByName(string userName)
     {
@@ -70,14 +70,9 @@ public class UserIdentityService(IHashService passwordHasher, IUserIdentityRepos
 
     public async Task Register(RegisterRequest req)
     {
-        var newUser = new User()
-        {
-            FirstName = req.FirstName,
-            LastName = req.LastName,
-            EmailAddress = req.EmailAddress,
-            UserName = req.UserName,
-            PasswordHash = passwordHasher.GenerateHash(req.Password),
-        };
+        var passwordHash = passwordHasher.GenerateHash(req.Password);
+
+        var newUser = factory.CreateUser(req, passwordHash);
 
         await repo.UpsertRecordsAsync<User>(newUser);
     }

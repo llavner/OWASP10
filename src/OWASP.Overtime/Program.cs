@@ -2,6 +2,7 @@ using System.Text;
 
 using Microsoft.IdentityModel.Tokens;
 
+using OWASP.Application.Factories;
 using OWASP.Application.Interfaces;
 using OWASP.Application.Services;
 using OWASP.Infrastructure.Repository;
@@ -11,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddKeyVaultSecrets();
 builder.AddOvertimeEntryDb();
+
+builder.Services.AddTransient<IOvertimeEntryFactory, OvertimeEntryFactory>();
 
 builder.Services.AddScoped<IOvertimeEntryService, OvertimeEntryService>();
 builder.Services.AddScoped<IOvertimeEntryRepository, OvertimeEntryRepository>();

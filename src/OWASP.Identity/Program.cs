@@ -1,3 +1,4 @@
+using OWASP.Application.Factories;
 using OWASP.Application.Interfaces;
 using OWASP.Application.Services;
 using OWASP.Identity.Settings;
@@ -13,6 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+builder.Services.AddTransient<IUserIdentityFactory, UserIdentityFactory>();
 
 builder.Services.AddScoped<IUserIdentityService, UserIdentityService>();
 builder.Services.AddScoped<IHashService, HashingService>();

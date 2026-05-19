@@ -6,19 +6,11 @@ using OWASP.Application.Dtos;
 using OWASP.Application.Interfaces;
 using OWASP.Domain.Models;
 
-public class OvertimeEntryService(IOvertimeEntryRepository repo, ILogger<OvertimeEntryService> logger) : IOvertimeEntryService
+public class OvertimeEntryService(IOvertimeEntryRepository repo, ILogger<OvertimeEntryService> logger, IOvertimeEntryFactory factory) : IOvertimeEntryService
 {
     public async Task AddEntryAsync(string userId, OvertimeEntryRequest request)
     {
-        var newEntry = new OvertimeEntry()
-        {
-             id = Guid.NewGuid().ToString(),
-             UserId = userId,
-             StartDate = request.StartDate,
-             EndDate = request.EndDate,
-             Hours = request.Hours,
-             Minutes = request.Minutes,
-        };
+        var newEntry = factory.Create(userId, request);
 
         await repo.UpsertRecordsAsync<OvertimeEntry>(newEntry);
 
