@@ -4,7 +4,6 @@ using OWASP.Application.Dtos;
 using OWASP.Application.Interfaces;
 using OWASP.Domain.Models;
 
-
 public class OvertimeEntryFactory : IOvertimeEntryFactory
 {
     public OvertimeEntry Create(string userId, OvertimeEntryRequest request)
