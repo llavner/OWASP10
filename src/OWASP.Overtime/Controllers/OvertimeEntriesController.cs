@@ -11,7 +11,9 @@ using OWASP.Application.Interfaces;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class OvertimeEntriesController(IOvertimeEntryService service) : ControllerBase
+public class OvertimeEntriesController(
+    IOvertimeEntryService service,
+    ILogger<OvertimeEntriesController> logger) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateEntry([FromBody] OvertimeEntryRequest request)
@@ -21,6 +23,7 @@ public class OvertimeEntriesController(IOvertimeEntryService service) : Controll
 
         if (string.IsNullOrEmpty(userId))
         {
+            logger.LogWarning("SecurityEvent: UnauthorizedRequest Path={Path}", HttpContext.Request.Path);
             return Unauthorized();
         }
 
@@ -37,6 +40,7 @@ public class OvertimeEntriesController(IOvertimeEntryService service) : Controll
 
         if (string.IsNullOrEmpty(userId))
         {
+            logger.LogWarning("SecurityEvent: UnauthorizedRequest Path={Path}", HttpContext.Request.Path);
             return Unauthorized();
         }
 

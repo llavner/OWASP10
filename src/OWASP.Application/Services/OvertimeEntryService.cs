@@ -9,7 +9,10 @@ using OWASP.Domain.Models;
 
 using static OWASP.Application.Common.OvertimeEntryResultCodes;
 
-public class OvertimeEntryService(IOvertimeEntryRepository repo, ILogger<OvertimeEntryService> logger, IOvertimeEntryFactory factory) : IOvertimeEntryService
+public class OvertimeEntryService(
+    IOvertimeEntryRepository repo,
+    ILogger<OvertimeEntryService> logger,
+    IOvertimeEntryFactory factory) : IOvertimeEntryService
 {
     public async Task<Result<OvertimeEntry, OvertimeEntryResultCode>> AddEntryAsync(string userId, OvertimeEntryRequest request)
     {
@@ -20,6 +23,11 @@ public class OvertimeEntryService(IOvertimeEntryRepository repo, ILogger<Overtim
             await repo.UpsertRecordsAsync<OvertimeEntry>(newEntry);
             logger.LogInformation("New entry with Id: {EntryId} added successfully for user {UserId}.", newEntry.id, userId);
             return Result<OvertimeEntry, OvertimeEntryResultCode>.Success(newEntry, OvertimeEntryResultCode.Success);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            logger.LogWarning(ex, "SecurityEvent: Unauthorized access attempt by user {UserId}", userId);
+            return Result<OvertimeEntry, OvertimeEntryResultCode>.Failure(OvertimeEntryResultCode.Unauthorized, "Unauthorized access.");
         }
         catch (Exception ex)
         {
