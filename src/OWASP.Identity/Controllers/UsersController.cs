@@ -80,6 +80,7 @@ public class UsersController(
         {
         new Claim(JwtRegisteredClaimNames.Sub, user.id),
         new Claim(ClaimTypes.Name, user.UserName),
+        new Claim(ClaimTypes.Role, user.Role ?? "User"),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
