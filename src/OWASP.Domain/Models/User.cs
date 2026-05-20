@@ -1,0 +1,23 @@
+namespace OWASP.Domain.Models;
+
+using System.Text.Json.Serialization;
+
+public sealed class User
+{
+    [JsonPropertyName("id")]
+    public string id { get; set; } = Guid.NewGuid().ToString();
+
+    public string FirstName { get; set; } = string.Empty;
+
+    public string LastName { get; set; } = string.Empty;
+
+    public string UserName { get; set; } = string.Empty;
+
+    public string Role { get; set; } = string.Empty;
+
+    public string PasswordHash { get; set; } = string.Empty;
+
+    public string EmailAddress { get; set; } = string.Empty;
+
+    public string? LastActive { get; set; }
+}
