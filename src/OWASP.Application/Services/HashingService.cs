@@ -19,21 +19,47 @@ public class HashingService : IHashService
     {
         var salt = RandomNumberGenerator.GetBytes(SaltSize);
         var hash = HashPassword(password, salt);
-        return hash;
+        return $"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}";
     }
 
     public bool VerifyHash(string password, string passwordHash)
     {
-        var parts = passwordHash.Split('-');
-        var hash = Convert.FromHexString(parts[0]);
-        var salt = Convert.FromHexString(parts[1]);
-        var outputHash = HashPassword(password, salt);
-        return outputHash.Equals(passwordHash);
+        if (!TryParseHash(passwordHash, out var expectedHash, out var salt))
+        {
+            return false;
+        }
+
+        var actualHash = HashPassword(password, salt);
+        return CryptographicOperations.FixedTimeEquals(actualHash, expectedHash);
     }
 
-    private string HashPassword(string password, byte[] salt)
+    private static bool TryParseHash(string passwordHash, out byte[] hash, out byte[] salt)
+    {
+        hash = [];
+        salt = [];
+
+        var parts = passwordHash.Split('-');
+        if (parts.Length != 2)
+        {
+            return false;
+        }
+
+        try
+        {
+            hash = Convert.FromHexString(parts[0]);
+            salt = Convert.FromHexString(parts[1]);
+            return true;
+        }
+        catch (FormatException)
+        {
+            return false;
+        }
+    }
+
+    private static byte[] HashPassword(string password, byte[] salt)
     {
         var passwordBytes = Encoding.UTF8.GetBytes(password);
+
         using var argon2 = new Argon2id(passwordBytes)
         {
             MemorySize = MemorySize,
@@ -41,7 +67,7 @@ public class HashingService : IHashService
             Iterations = Iterations,
             Salt = salt,
         };
-        var hash = argon2.GetBytes(HashSize);
-        return $"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}";
+
+        return argon2.GetBytes(HashSize);
     }
 }

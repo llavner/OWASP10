@@ -31,7 +31,10 @@ public class UsersController(
     {
         if (string.IsNullOrWhiteSpace(req.EmailAddress) || string.IsNullOrWhiteSpace(req.Password))
         {
-            logger.LogWarning("SecurityEvent: LoginRejected_MissingCredentials");
+            logger.LogWarning(
+                "SecurityEvent: LoginRejected_MissingCredentials Email={Email}",
+                req.EmailAddress);
+
             return BadRequest("Missing credentials.");
         }
 
@@ -39,9 +42,19 @@ public class UsersController(
 
         if (!result.IsSuccess || result.Value is null)
         {
-            logger.LogWarning("SecurityEvent: LoginRejected Result={Result}", result.Code);
+            logger.LogWarning(
+                "SecurityEvent: LoginRejected Email={Email} Result={Result}",
+                req.EmailAddress,
+                result.Code);
+
             return Unauthorized(result.Error);
         }
+
+        logger.LogInformation(
+            "SecurityEvent: LoginSucceeded Email={Email} UserId={UserId} Role={Role}",
+            result.Value.EmailAddress,
+            result.Value.id,
+            result.Value.Role ?? "User");
 
         var token = GenerateJwtToken(result.Value);
         return Ok(new { Token = token });
@@ -56,11 +69,19 @@ public class UsersController(
 
         if (emailResult.IsSuccess && emailResult.Value is not null)
         {
+            logger.LogWarning(
+                "SecurityEvent: RegisterRejected_DuplicateEmail Email={Email}",
+                regReq.EmailAddress);
+
             return BadRequest($"{regReq.EmailAddress} already used.");
         }
 
         if (nameResult.IsSuccess && nameResult.Value is not null)
         {
+            logger.LogWarning(
+                "SecurityEvent: RegisterRejected_DuplicateUsername UserName={UserName}",
+                regReq.UserName);
+
             return BadRequest($"{regReq.UserName} already used.");
         }
 
@@ -68,8 +89,19 @@ public class UsersController(
 
         if (!registerResult.IsSuccess)
         {
+            logger.LogWarning(
+                "SecurityEvent: RegisterRejected Email={Email} UserName={UserName} Result={Result}",
+                regReq.EmailAddress,
+                regReq.UserName,
+                registerResult.Code);
+
             return BadRequest(registerResult.Error);
         }
+
+        logger.LogInformation(
+            "SecurityEvent: RegisterSucceeded Email={Email} UserName={UserName}",
+            regReq.EmailAddress,
+            regReq.UserName);
 
         return Ok();
     }
@@ -80,6 +112,7 @@ public class UsersController(
         {
         new Claim(JwtRegisteredClaimNames.Sub, user.id),
         new Claim(ClaimTypes.Name, user.UserName),
+        new Claim(ClaimTypes.Email, user.EmailAddress),
         new Claim(ClaimTypes.Role, user.Role ?? "User"),
         };
 
